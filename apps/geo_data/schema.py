@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field, validator
 
 
 class UserGeo(BaseModel):
-    user_id: int = Field(title="ID пользователя")
+    user_id: int = Field(title="ID пользователя", default=1)
     longitude: float = Field(title="Долгота")
     latitude: float = Field(title="Ширина")
     datetime_at: datetime = Field(
@@ -24,3 +24,7 @@ class UserGeo(BaseModel):
         if not -90 <= latitude <= 90:
             raise ValueError("Latitude is not +/- 90 degrees")
         return latitude
+
+    @property
+    def wkt(self) -> str:
+        return f"SRID=4326;POINT({self.longitude} {self.latitude})"
